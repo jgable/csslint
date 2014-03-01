@@ -19,6 +19,7 @@ CSSLint.addRule({
                 part,
                 modifier,
                 idCount,
+                firstIdCol = false,
                 i, j, k;
 
             for (i=0; i < selectors.length; i++){
@@ -31,6 +32,9 @@ CSSLint.addRule({
                         for (k=0; k < part.modifiers.length; k++){
                             modifier = part.modifiers[k];
                             if (modifier.type == "id"){
+                                if (firstIdCol === false) {
+                                    firstIdCol = part.col;
+                                }
                                 idCount++;
                             }
                         }
@@ -38,9 +42,9 @@ CSSLint.addRule({
                 }
 
                 if (idCount == 1){
-                    reporter.report("Don't use IDs in selectors.", selector.line, selector.col, rule);
+                    reporter.report("Don't use IDs in selectors.", selector.line, firstIdCol, rule);
                 } else if (idCount > 1){
-                    reporter.report(idCount + " IDs in the selector, really?", selector.line, selector.col, rule);
+                    reporter.report(idCount + " IDs in the selector, really?", selector.line, firstIdCol, rule);
                 }
             }
 
